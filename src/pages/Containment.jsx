@@ -4,6 +4,7 @@ import { Environment, OrbitControls } from '@react-three/drei';
 // import Box from '../components/Box.jsx' // ไม่ได้ใช้งานแล้ว
 import Layout from '../components/Layout.jsx';
 import Rack2 from '../components/Rack2.jsx';
+import TestBlenderModel from '../components/TestBlender.jsx';
 
 function Containment() {
     const controlsRef = useRef();
@@ -48,10 +49,11 @@ function Containment() {
                     className='flex flex-grow h-[100%] relative'
                     camera={{ position: [16, 8, 8], zoom: 4.5 }}
                 >
-                    <ambientLight intensity={4} />
+                    <ambientLight intensity={1} />
                     <OrbitControls ref={controlsRef} maxPolarAngle={1.5} />
                     <Environment preset="city" />
-                    <Rack2 />
+                    <TestBlenderModel />
+                    {/* <Rack2 /> */}
                 </Canvas>
 
                 {/* 2. ปุ่ม Reset ที่ถูกตรึงอยู่ด้านบนซ้ายของ Canvas */}
