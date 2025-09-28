@@ -1,12 +1,39 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Environment, OrbitControls } from '@react-three/drei';
+import * as THREE from 'three';
 import Layout from '../components/Layout.jsx';
 import Model from '../components/Model.jsx';
 
+function CameraAnimator({ controlsRef, cameraGoal, onDone }) {
+  useFrame(() => {
+    if (!controlsRef.current || !cameraGoal) return;
+
+    const cam = controlsRef.current.object;
+    const target = controlsRef.current.target;
+
+    const lerpSpeed = 0.03;
+
+    // Lerp position
+    cam.position.lerp(new THREE.Vector3(...cameraGoal.position), lerpSpeed);
+    // Lerp target
+    target.lerp(new THREE.Vector3(...cameraGoal.target), lerpSpeed);
+
+    controlsRef.current.maxPolarAngle = cameraGoal.maxPolarAngle;
+    controlsRef.current.update();
+
+    // stop เมื่อใกล้พอ
+    if (cam.position.distanceTo(new THREE.Vector3(...cameraGoal.position)) < 0.05) {
+      onDone();
+    }
+  });
+  return null;
+}
+
+
 function Containment() {
   const controlsRef = useRef();
-  const [cameraview, setCameraview] = useState(null);
+  const [cameraGoal, setCameraGoal] = useState(null);
   const [feature, setFeature] = useState('overview');
 
   const tempPosition = [
@@ -19,43 +46,46 @@ function Containment() {
     setSelectTempPosition(event.target.value);
   };
 
-  const setCameraView = ({ position, target = [0, 0, 0], maxPolarAngle = 3.14 }) => {
-    if (controlsRef.current) {
-      controlsRef.current.object.position.set(...position);
-      controlsRef.current.target.set(...target);
-      controlsRef.current.maxPolarAngle = maxPolarAngle;
-      controlsRef.current.update();
-    }
-  };
-
   const handleFeatureChange = (newFeature) => {
     if (newFeature === 'Temp') {
-      setCameraView({ position: [15.00, 20.55, 0.00],zoom: 4.50, maxPolarAngle: 1.5  });
+      setCameraGoal({
+        position: [15.0, 20.55, 0.0],
+        target: [0, 0, 0],
+        maxPolarAngle: 1.5,
+      });
       setFeature('Temp');
     } else if (newFeature === 'overview') {
-      setCameraView({ position:[14.31, 5.89, 13.79],zoom: 4.50, maxPolarAngle: 1.5 });
+      setCameraGoal({
+        position: [14.31, 5.89, 13.79],
+        target: [0, 0, 0],
+        maxPolarAngle: 1.5,
+      });
       setFeature('overview');
     }
   };
 
   const resetView = () => handleFeatureChange('overview');
 
-
-
   return (
     <Layout onFeatureChange={handleFeatureChange}>
       <div className='w-full flex-grow flex flex-row border justify-start relative'>
-
         <Canvas
           className='w-full h-full relative'
           camera={{ position: [14.31, 5.89, 13.79], zoom: 4.5 }}
-          onCreated={({ camera }) => setCameraview(camera)}
         >
           <ambientLight intensity={1} />
           <OrbitControls ref={controlsRef} maxPolarAngle={1.5} />
           <Environment preset="city" />
           <Model tempData={selectTempPostion} viewPosition={feature} />
 
+          {/* Animator ทำงานเฉพาะตอนเปลี่ยนมุมมอง */}
+          {cameraGoal && (
+            <CameraAnimator
+              controlsRef={controlsRef}
+              cameraGoal={cameraGoal}
+              onDone={() => setCameraGoal(null)}
+            />
+          )}
         </Canvas>
 
         {/* Reset Button */}
@@ -72,10 +102,7 @@ function Containment() {
         {feature === 'Temp' && (
           <div className='flex flex-col w-[20%] h-full border bg-white p-4'>
             <h2>Temperature Chart</h2>
-            <select
-              value={selectTempPostion}
-              onChange={handleSelectChange}
-            >
+            <select value={selectTempPostion} onChange={handleSelectChange}>
               {tempPosition.map((temp, index) => (
                 <option key={index} value={temp.PositionValue}>
                   {temp.PositionName}
@@ -84,7 +111,6 @@ function Containment() {
             </select>
           </div>
         )}
-
       </div>
     </Layout>
   );
