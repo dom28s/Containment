@@ -14,21 +14,20 @@ function TopBar({ onFeatureChange, onMenuToggle }) {
     };
 
     return (
-        <div className='flex flex-row justify-between items-center p-2 border-b' >
+        <div className='flex flex-row justify-between items-center p-2  h-[10%] ' >
             <div className='flex flex-row items-center w-[20%] justify-between'>
                 {/* ผูก onClick เข้ากับ onMenuToggle */}
                 <GiHamburgerMenu 
                     onClick={onMenuToggle} 
                     className="cursor-pointer text-2xl ml-2" 
                 />
-                <select >
+                <select className='bg-gray-800' >
                     <option value="">Select Room</option>
                     <option value="Sever Room">Sever Room</option>
                     <option value="Toll Room">Toll Room</option>
                 </select>
             </div>
-            <h1>Overview</h1>
-            <select onChange={handleChange} >
+            <select className='bg-gray-800' onChange={handleChange} >
                 <option value="">Select Feature</option>
                 <option value="Temp">Temperature</option>
                 <option value="overview">Overview</option>

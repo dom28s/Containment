@@ -5,6 +5,11 @@ import * as THREE from 'three';
 import Layout from '../components/Layout.jsx';
 import Model from '../components/Model.jsx';
 
+
+import { IoThermometerOutline } from "react-icons/io5";
+import { HiOutlineFire, HiOutlineLightBulb } from "react-icons/hi2";
+import { MdOutlineDoorSliding } from "react-icons/md";
+
 function CameraAnimator({ controlsRef, cameraGoal, onDone }) {
   useFrame(() => {
     if (!controlsRef.current || !cameraGoal) return;
@@ -63,12 +68,18 @@ function Containment() {
 
   const resetView = () => handleFeatureChange('overview');
 
+const widget = [
+  { name: 'Temperature', value: [23, 25], logo: <IoThermometerOutline /> },
+  { name: 'Door', value: [1, 0], logo: <MdOutlineDoorSliding /> },  // fixed
+  { name: 'Light', value: [1, 1], logo: <HiOutlineLightBulb /> },
+  { name: 'Fire Alarm', value: 1, logo: <HiOutlineFire /> },
+];
   return (
     <Layout onFeatureChange={handleFeatureChange}>
-      <div className='w-full flex-grow flex flex-row border justify-start relative'>
+      <div className='w-full flex-grow flex flex-row  justify-start '>
         <Canvas
           className='w-full h-full relative'
-          camera={{ position: [14.31, 5.89, 13.79], zoom: 4.5 }}
+          camera={{ position: [14.31, 5.89, 13.79], zoom: 3.5 }}
         >
           <ambientLight intensity={1} />
           <OrbitControls ref={controlsRef} maxPolarAngle={1.5} />
@@ -85,8 +96,49 @@ function Containment() {
           )}
         </Canvas>
 
+
+        {feature !== 'Temp' && (
+  <div className="absolute bottom-5 w-full left-0 z-50 flex flex-row justify-evenly px-4">
+    {widget.map((item, index) => (
+      <div
+        key={index}
+        className="flex flex-row items-center p-4 h-[140px] w-[240px] 
+                   bg-gray-800 rounded-xl shadow-lg border border-gray-700"
+      >
+        {/* Circle logo */}
+        <div className="w-[80px] h-[80px] rounded-full flex items-center justify-center 
+                        bg-gray-700 shadow-inner">
+          {React.cloneElement(item.logo, {
+            className: "w-2/3 h-2/3 text-gray-200",
+          })}
+        </div>
+
+        {/* Values */}
+        <div className="ml-4 flex flex-col justify-center text-gray-100">
+          <h2 className="text-lg font-semibold">{item.name}</h2>
+          {Array.isArray(item.value) ? (
+            <div className="flex space-x-2 mt-1">
+              {item.value.map((value, idx) => (
+                <span
+                  key={idx}
+                  className="px-2 py-1 text-sm rounded-md bg-gray-700"
+                >
+                  {value}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <span className="mt-1 text-sm">{item.value}</span>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
+
         {/* Reset Button */}
-        <div className='absolute top-10 left-4 z-10 bg-gray-100 p-2 rounded-lg shadow-md flex items-center text-gray-700'>
+        <div className='absolute top left-4 z-10 bg-gray-100 p-2 rounded-lg shadow-md flex items-center text-gray-700'>
           <button
             onClick={resetView}
             className="px-4 py-1 bg-white border border-gray-300 rounded-md text-sm hover:bg-gray-50 transition"
@@ -95,11 +147,12 @@ function Containment() {
           </button>
         </div>
 
+
         {/* Temperature Dropdown */}
         {feature === 'Temp' && (
-          <div className='flex flex-col w-[20%] h-full border bg-white p-4'>
+          <div className='flex flex-col w-[20%] h-full border  p-4'>
             <h2>Temperature Chart</h2>
-            <select value={selectTempPostion} onChange={handleSelectChange}>
+            <select className='bg-gray-800' value={selectTempPostion} onChange={handleSelectChange}>
               {tempPosition.map((temp, index) => (
                 <option key={index} value={temp.PositionValue}>
                   {temp.PositionName}
@@ -108,6 +161,18 @@ function Containment() {
             </select>
           </div>
         )}
+        {/* {feature !== 'Temp' && (
+          <div className='flex flex-col w-[20%] h-full border  p-4'>
+            <h2>Temperature Chart</h2>
+            <select className='bg-gray-800' value={selectTempPostion} onChange={handleSelectChange}>
+              {tempPosition.map((temp, index) => (
+                <option key={index} value={temp.PositionValue}>
+                  {temp.PositionName}
+                </option>
+              ))}
+            </select>
+          </div>
+        )} */}
       </div>
     </Layout>
   );
