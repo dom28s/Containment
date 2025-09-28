@@ -12,24 +12,21 @@ function CameraAnimator({ controlsRef, cameraGoal, onDone }) {
     const cam = controlsRef.current.object;
     const target = controlsRef.current.target;
 
-    const lerpSpeed = 0.03;
-
     // Lerp position
-    cam.position.lerp(new THREE.Vector3(...cameraGoal.position), lerpSpeed);
+    cam.position.lerp(new THREE.Vector3(...cameraGoal.position), 0.05);
     // Lerp target
-    target.lerp(new THREE.Vector3(...cameraGoal.target), lerpSpeed);
+    target.lerp(new THREE.Vector3(...cameraGoal.target), 0.05);
 
     controlsRef.current.maxPolarAngle = cameraGoal.maxPolarAngle;
     controlsRef.current.update();
 
-    // stop เมื่อใกล้พอ
+    // ถ้าใกล้ตำแหน่งแล้ว => animation เสร็จ
     if (cam.position.distanceTo(new THREE.Vector3(...cameraGoal.position)) < 0.05) {
-      onDone();
+      onDone(); // reset cameraGoal เพื่อหยุด lerp
     }
   });
   return null;
 }
-
 
 function Containment() {
   const controlsRef = useRef();
