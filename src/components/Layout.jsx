@@ -16,12 +16,9 @@ function Layout({ children, onFeatureChange }) {
     })
 
     return (
-        <div className='flex flex-row h-[95vh] w-[100%] border bg-blue-500'>
-            
-
-            
-            {/* 3. Content Container (ไม่ถูกดัน) */}
-            <div className={`flex flex-col h-full bg-white w-full`}> 
+<div className="flex flex-row h-[95vh] w-full border bg-gray-800">
+          
+            <div className={`flex flex-col h-full  w-full`}> 
                 <TopBar onFeatureChange={onFeatureChange} onMenuToggle={toggleMenu} /> 
                 {children}
             </div>
