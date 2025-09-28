@@ -1,28 +1,19 @@
-
-import React, { useEffect, useState } from 'react';
-import SideBar from './SideBar.jsx';
+import React, { useState } from 'react';
 import TopBar from './TopBar.jsx';
-import { div } from 'three/tsl';
 
 function Layout({ children, onFeatureChange }) {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen);
-    };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-    useEffect(() => {
-        console.log(isMenuOpen);
-    })
-
-    return (
-        <div className="flex flex-row h-[100vh] w-full  bg-neutral-800 text-white">
-            <div className={`flex flex-col h-full  w-full`}>
-                <TopBar onFeatureChange={onFeatureChange} onMenuToggle={toggleMenu} />
-                {children}
-            </div>
-        </div>
-    );
+  return (
+    <div className="flex flex-row h-screen w-full bg-[#111827] text-white font-sans">
+      <div className="flex flex-col h-full w-full">
+        <TopBar onFeatureChange={onFeatureChange} onMenuToggle={toggleMenu} />
+        {children}
+      </div>
+    </div>
+  );
 }
 
 export default Layout;

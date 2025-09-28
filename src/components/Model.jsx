@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { ConstNode } from 'three/webgpu';
 
-const modelPath = '../../public/Models/testBlender2.glb';
+const modelPath = '../../public/Models/testBlender.glb';
 
 
 
