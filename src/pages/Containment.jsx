@@ -5,9 +5,9 @@ import * as THREE from "three";
 import Layout from "../components/Layout.jsx";
 import Model from "../components/Model.jsx";
 
-import { IoThermometerOutline } from "react-icons/io5";
-import { HiOutlineFire, HiOutlineLightBulb } from "react-icons/hi2";
-import { MdOutlineDoorSliding } from "react-icons/md";
+// import { IoThermometerOutline } from "react-icons/io5";
+// import { HiOutlineFire, HiOutlineLightBulb } from "react-icons/hi2";
+// import { MdOutlineDoorSliding } from "react-icons/md";
 
 function CameraAnimator({ controlsRef, cameraGoal, onDone }) {
   useFrame(() => {
@@ -72,10 +72,10 @@ function Containment() {
   const resetView = () => handleFeatureChange("overview");
 
   const widget = [
-    { name: "Temperature", value: [23, 25], logo: <IoThermometerOutline /> },
-    { name: "Door", value: [1, 0], logo: <MdOutlineDoorSliding /> }, // fixed
-    { name: "Light", value: [1, 1], logo: <HiOutlineLightBulb /> },
-    { name: "Fire Alarm", value: 1, logo: <HiOutlineFire /> },
+    { name: "Temperature", value: [23, 25], logo: 2 },
+    { name: "Door", value: [1, 0], logo: 2 }, // fixed
+    { name: "Light", value: [1, 1], logo: 2 },
+    { name: "Fire Alarm", value: 1, logo: 2 },
   ];
   
   return (
@@ -112,9 +112,9 @@ function Containment() {
                   className="w-[80px] h-[80px] rounded-full flex items-center justify-center 
                         bg-[#111827] shadow-inner border border-[#0ea5e9]"
                 >
-                  {React.cloneElement(item.logo, {
+                  {/* {React.cloneElement(item.logo, {
                     className: "w-2/3 h-2/3 text-[#0ea5e9]",
-                  })}
+                  })} */}
                 </div>
 
                 <div className="ml-4 flex flex-col justify-center text-white">
